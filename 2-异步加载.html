@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      overflow: hidden;
+      margin: 0 auto;
+      width: 1000px;
+      height:800px;
+    } 
+  </style> 
+  <!-- <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script> -->
+  <!-- 自上而下加载 执行到这里会会把资源下载 从而消耗很多时间-->
+</head>
+<body>
+  <!-- 异步加载地图，加快首屏的渲染速度 -->
+  <div id="container"></div>
+  <script>
+    console.log(window.BMapGL)
+
+    const init = () => {
+      var map = new BMapGL.Map("container")
+      var point = new BMapGL.Point(116.404, 39.915) // 中心点位置
+      map.centerAndZoom(point, 16)
+      map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+    }
+    window.onload = () => {
+      var script = document.createElement('script')
+      script.src = 'https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr&callback=init'
+      document.body.appendChild(script)
+    }
+  </script>
+</body>
+</html>

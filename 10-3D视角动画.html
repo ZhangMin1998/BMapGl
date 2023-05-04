@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      margin: 0 auto;
+      /* width: 100%;
+      height: 100%; */
+      width: 1100px;
+      height: 900px;
+    }
+    #tools {
+      position: absolute;
+      left:0;
+      top:0;
+      z-index: 1000;
+    }
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="tools">
+		<button id="start">播放动画</button>
+		<button id="end">停止播放</button>
+	</div>
+  <script>
+    // console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container")
+    var point = new BMapGL.Point(116.404, 39.915) // 中心点位置
+    map.centerAndZoom(point, 20)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+    // map.setMapType(BMAP_EARTH_MAP)
+    map.setTilt(20)
+
+    var keyFrames = [
+      {
+        center: new BMapGL.Point(116.404, 39.915),
+        zoom:18,
+        tilt: 50,
+        heading: 0,
+        percentage: 0 // 当前关键帧处于动画过程的百分比，取值范围0~1
+      },
+      {
+        center: new BMapGL.Point(116.404, 39.915),
+        zoom: 20,
+        tilt: 70,
+        heading: 100,
+        percentage: 0.5
+      },
+      {
+        center: new BMapGL.Point(116.404, 39.915),
+        zoom:19,
+        tilt: 70,
+        heading: 200,
+        percentage: 1
+      }
+    ]
+
+    var opts = {
+      duration: 15000,   // 每次迭代动画持续时间
+      delay: 1000,       // 设置动画延迟开始时间
+      interation: 'INFINITE'   // 设置动画迭代次数 默认1
+    }
+
+    var animation = new BMapGL.ViewAnimation(keyFrames, opts)
+    // map.startViewAnimation(animation)
+
+    // 动画事件
+    animation.addEventListener('animationstart', e => {        // 监听动画开始事件
+      console.log('start')
+    })
+    animation.addEventListener('animationiterations', e => {   // 监听动画迭代事件
+      console.log('onanimationiterations')
+    })
+    animation.addEventListener('animationend', e => {        // 监听动画结束事件
+      console.log('end')
+    })
+    animation.addEventListener('animationcancel', e => {    // 监听动画中途被终止事件
+      console.log('cancel')
+    })
+
+    document.getElementById('start').addEventListener('click', () => {
+      map.startViewAnimation(animation)    // 开始播放动画
+    })
+    document.getElementById('end').addEventListener('click', () => {
+      map.cancelViewAnimation(animation)    // 强制停止动画
+    })
+    
+  </script>
+</body>
+</html>

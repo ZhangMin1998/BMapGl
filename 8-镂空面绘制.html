@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      margin: 0 auto;
+      width: 1000px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <div style="display: flex;justify-content:center;align-items:center;padding: 20px;">
+    <button id="btn">清除标注</button>
+  </div>
+  <script>
+    console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container")
+    var point = new BMapGL.Point(116.718, 40.142) // 中心点位置
+    map.centerAndZoom(point, 11)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+
+    // 画多边形
+    // var polygon = new BMapGL.Polygon([
+    //   new BMapGL.Point(116.387112,39.920977),
+    //   new BMapGL.Point(116.385243,39.913063),
+    //   new BMapGL.Point(116.394226,39.917988),
+    //   new BMapGL.Point(116.401772,39.921364),
+    //   new BMapGL.Point(116.41248,39.927893)
+    // ], {
+    //   strokeColor:"blue",
+    //   strokeWeight:2,
+    //   strokeOpacity:0.5,
+    //   fillColor: 'pink',
+    //   // enableEditing: true, //是否启用线编辑
+    // });
+    // map.addOverlay(polygon)
+
+    var bd = new BMapGL.Boundary()
+    bd.get('顺义区', function (rs) {
+      var hole = new BMapGL.Polygon(rs.boundaries, {
+        fillColor: 'blue',
+        fillOpacity: 0.2
+      })
+      map.addOverlay(hole)
+    })
+
+    // 清除标注
+    const btn = document.getElementById('btn')
+    btn.addEventListener('click', () => {
+      map.clearOverlays()
+    })
+  </script>
+</body>
+</html>

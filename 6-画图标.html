@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      margin: 0 auto;
+      width: 1000px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <div style="display: flex;justify-content:center;align-items:center;padding: 20px;">
+    <button id="btn">清除标注</button>
+  </div>
+  <script>
+    console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container")
+    var point = new BMapGL.Point(116.404, 39.915) // 中心点位置
+    map.centerAndZoom(point, 11)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+
+    // 自定义样式
+    // map.setMapStyleV2({     
+    //   styleId: '84675cef04838d818966a515734a8139'
+    // })
+
+    // 创建默认标注  
+    var marker1 = new BMapGL.Marker(point) 
+    map.addOverlay(marker1)
+
+    // 自定义标注
+    var myIcon = new BMapGL.Icon(
+      "https://www.youbaobao.xyz/datav-res/datav/location.png", 
+      new BMapGL.Size(60, 60), 
+      {
+        anchor: new BMapGL.Size(30, 30),
+        imageOffset: new BMapGL.Size(0, 0)
+      }
+    )
+    var marker2 = new BMapGL.Marker(new BMapGL.Point(116.3, 39.9), { icon: myIcon, enableDragging: true }) // 可拖动
+    map.addOverlay(marker2)
+
+    marker2.addEventListener("click", function(){   
+      alert("您点击了标注")
+    })
+
+    // 清除标注
+    const btn = document.getElementById('btn')
+    btn.addEventListener('click', () => {
+      // map.removeOverlay(marker2)
+      map.clearOverlays()
+    })
+  </script>
+</body>
+</html>

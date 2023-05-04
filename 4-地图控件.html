@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      margin: 0 auto;
+      width: 1000px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container", {
+      minZoom: 6,
+      maxZoom: 16,
+      mapType: BMAP_EARTH_MAP
+    })
+    var point = new BMapGL.Point(116.404, 39.915) // 中心点位置
+    map.centerAndZoom(point, 14)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+    // map.setMapType(BMAP_EARTH_MAP)
+
+    // 添加比例尺控件
+    var scaleCtrl = new BMapGL.ScaleControl() 
+    map.addControl(scaleCtrl)
+    // console.log(scaleCtrl.getUnit())
+    // scaleCtrl.setUnit(BMAP_UNIT_IMPERIAL)
+
+    // 添加缩放控件
+    var zoomCtrl = new BMapGL.ZoomControl() 
+    map.addControl(zoomCtrl)
+
+    // 添加3D控件
+    var navi3DCtrl = new BMapGL.NavigationControl3D()
+    map.addControl(navi3DCtrl)
+
+    // 创建定位控件
+    var locationControl = new BMapGL.LocationControl({
+      anchor: BMAP_ANCHOR_TOP_LEFT, // 控件的停靠位置（可选，默认左下角）
+      offset: new BMapGL.Size(20, 450) // 控件基于停靠位置的偏移量（可选）
+    })
+    map.addControl(locationControl)
+    
+    // 城市选择控件
+    var cityControl = new BMapGL.CityListControl({
+        anchor: BMAP_ANCHOR_TOP_LEFT,
+        offset: new BMapGL.Size(10, 5)
+    })
+    map.addControl(cityControl)
+
+    // 版权控件
+    var cr = new BMapGL.CopyrightControl({
+      anchor: BMAP_ANCHOR_TOP_RIGHT,
+      offset: new BMapGL.Size(20, 20)
+    });
+    map.addControl(cr) //添加版权控件
+    var bs = map.getBounds() //返回地图可视区域
+    cr.addCopyright({
+      id: 1, 
+      content: "<img src='./ppx.png' width='50px' height='50px'/><a href='#' style='font-size:14px;color:#000'>我是张敏</a>", 
+      bounds: bs
+    })
+
+    // 添加事件
+    // map.addEventListener('zoomend', () => {
+    //   alert(map.getZoom())
+    // })
+  </script>
+</body>
+</html>

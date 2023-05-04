@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飞线图</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #map_container{
+      margin: 0 auto;
+      width: 1100px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+  <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+  <script src="https://mapv.baidu.com/build/mapv.min.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.159/dist/mapvgl.min.js"></script>
+  <script src="https://unpkg.com/mapvgl/dist/mapvgl.threelayers.min.js"></script>
+</head>
+<body>
+  <div id="map_container"></div>
+  <script>
+    // var map = new BMapGL.Map("map_container")
+    // var point = new BMapGL.Point(115.477, 31.223) // 中心点位置
+    // map.centerAndZoom(point, 5)
+    // map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+
+    // 一、初始化地图
+    const initBMap = () => {
+      var map = initMap({
+        tilt: 60,
+        center: [113.487899, 31.249162],
+        zoom: 5,
+        style: purpleStyle // snowStyle  purpleStyle
+      })
+      return map
+    }
+
+    // 二、准备数据源
+    const initData = () => {
+      var cities = [
+        '北京', '天津', '上海', '重庆', '石家庄', '太原', '呼和浩特', '哈尔滨', '长春',
+        '沈阳', '济南', '南京', '合肥', '杭州', '南昌', '福州', '郑州', '武汉', '长沙', '广州',
+        '南宁', '西安', '银川', '兰州', '西宁', '乌鲁木齐', '成都', '贵阳', '昆明', '拉萨', '海口'
+      ]
+      
+      var data = []
+      let random = 100
+      // 生成贝塞尔曲线坐标集
+      // var curve = new mapvgl.BezierCurve({
+      //   start: [12946640.989, 4846560.296],
+      //   end: [12946348.509, 4846401.146]
+      // })
+      // 1.实例化贝塞尔曲线对象
+      var curve = new mapvgl.BezierCurve()
+      while(random--) {
+        // 2.设置起点和终点坐标
+        var start = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(Math.random() * cities.length)])
+        var end = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(Math.random() * cities.length)])
+        curve.setOptions({
+          start: [start.lng, start.lat],
+          end: [end.lng, end.lat]
+        })
+        // 3.生成贝塞尔曲线坐标集
+        var curveData = curve.getPoints()
+        console.log(curveData)
+
+        data.push({
+          geometry: {
+            type: 'LineString',
+            coordinates: curveData
+          }
+        })
+      }
+  
+      return data
+    }
+
+    // 三、绘制数据源
+    const setData = (data, map) => {
+      // 1.生成 mapval 视图 View
+      var view = new mapvgl.View({ map })
+      // 2.初始化 mapvgl.Intensity 数据显示强度  大小和颜色
+      // 3.初始化 mapvgl 的 FlyLine 对象
+      var flyLineLayer = new mapvgl.FlyLineLayer({
+        style: 'chaos', // 'chaos' 'normal'   动画方式
+        color: '#fff', // 底线颜色
+        textureColor: 'pink', // 动画颜色
+        textureWidth: 15, // 动画的宽度
+        textureLength: 20, // 动画的长度
+        step: 0.3, // 动画的步长
+      })
+      // 4.将 FlyLine 对象加入 View 中
+      view.addLayer(flyLineLayer)
+      // 5.将 data 与 FlyLine 进行绑定
+      flyLineLayer.setData(data)
+    }
+
+    var map = initBMap()  // 初始化地图
+    var data = initData() // 准备数据源
+    setData(data, map)    // 绘制数据源
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17-3D建筑</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #map_container{
+      margin: 0 auto;
+      width: 1100px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+  <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+  <script src="https://mapv.baidu.com/build/mapv.min.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.159/dist/mapvgl.min.js"></script>
+  <script src="https://unpkg.com/mapvgl/dist/mapvgl.threelayers.min.js"></script>
+</head>
+<body>
+  <div id="map_container"></div>
+  <script>
+    // var map = new BMapGL.Map("map_container")
+    // var point = new BMapGL.Point(115.477, 31.223) // 中心点位置
+    // map.centerAndZoom(point, 5)
+    // map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+
+    // 一、初始化地图
+    const initBMap = () => {
+      let cityCenter = mapv.utilCityCenter.getCenterByCityName('重庆')
+      var map = initMap({
+        tilt: 80,
+        heading: 30,
+        center: [106.540547, 29.564858],
+        zoom: 17,
+        // style: purpleStyle // snowStyle  purpleStyle
+      })
+      return map
+    }
+    // 二、准备数据源
+    const initData = () => {
+      // var data = []
+      return fetch('https://www.youbaobao.xyz/datav-res/examples/chongqing.json').then(
+        res => res.json()
+      ).then(res => {
+        // console.log(res)
+        var polygons = []
+        for (var i = 0; i < res.length; i++) {
+          var line = res[i]
+          var polygon = []
+          var pt = [line[1] * 512, line[2] * 512]
+          for (var j = 3; j < line.length; j += 2) {
+            pt[0] += line[j] / 100 / 2
+            pt[1] += line[j + 1] / 100 / 2
+            polygon.push([pt[0], pt[1]])
+          }
+          polygons.push({
+            geometry: {
+              type: 'Polygon',
+              coordinates: [polygon]
+            },
+            properties: {
+              height: line[0] / 2
+            }
+          })
+        }
+        return polygons
+      })
+    }
+
+    // 三、绘制数据源
+    const setData = (data, map) => {
+      var view = new mapvgl.View({ map })
+      var shapeLayer = new mapvgl.ShapeLayer({
+        color: 'rgba(55, 55, 200, 1)',
+        blend: 'lighter',
+        style: 'window',
+        riseTime: 2000,
+        enablePicked: true, // 是否可以拾取
+        selectedIndex: -1, // 选中项
+        selectedColor: '#ee1111', // 选中项颜色
+        autoSelect: true, // 根据鼠标位置来自动设置选中项
+        onClick: e => {
+          alert(e)
+          console.log(e)
+        }
+      })
+      view.addLayer(shapeLayer)
+      shapeLayer.setData(data)
+    }
+
+    var map = initBMap()  // 初始化地图
+    initData().then(data => { // 准备数据源
+      setData(data, map)    // 绘制数据源
+    })
+  </script>
+</body>
+</html>

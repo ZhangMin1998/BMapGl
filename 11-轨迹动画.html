@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      margin: 0 auto;
+      /* width: 100%;
+      height: 100%; */
+      width: 1100px;
+      height: 900px;
+    }
+    #tools {
+      position: absolute;
+      left:0;
+      top:0;
+      z-index: 1000;
+    }
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+  <script type="text/javascript" src="https://api.map.baidu.com/library/TrackAnimation/src/TrackAnimation_min.js"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="tools">
+		<button id="start">播放动画</button>
+		<button id="end">停止播放</button>
+	</div>
+  <script>
+    console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container")
+    var point = new BMapGL.Point(114.7582,25.699122) // 中心点位置
+    map.centerAndZoom(point, 18)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+    // map.setMapType(BMAP_EARTH_MAP)
+    map.setTilt(20)
+
+    var path  = [
+      {
+        'lng': 114.771985,
+        'lat': 25.678743
+      }, 
+      {
+        'lng': 114.769968,
+        'lat': 25.679439
+      }, 
+      {
+        'lng': 114.7669,
+        'lat': 25.682472
+      }, 
+      {
+        'lng': 114.758119,
+        'lat': 25.695223
+      }, 
+      {
+        'lng': 114.755326,
+        'lat': 25.699268
+      }, 
+      {
+        'lng': 114.754688,
+        'lat': 25.700815
+      }, 
+      {
+        'lng': 114.75432,
+        'lat': 25.70263
+      }
+    ]
+    var point = []
+    for (var i = 0; i < path.length; i++) {
+      point.push(new BMapGL.Point(path[i].lng, path[i].lat))
+    }
+    var pl = new BMapGL.Polyline(point, {
+      strokeColor:"blue",
+      strokeWeight: 4,
+      strokeOpacity:1,
+    })
+
+    var opts = {
+      overallView: true, // 动画完成后自动调整视野到总览
+      duration: 15000,   // 每次迭代动画持续时间
+      delay: 1000,       // 设置动画延迟开始时间
+      tilt: 30,          // 轨迹播放的角度，默认为55
+      interation: 'INFINITE'   // 设置动画迭代次数 默认1
+    }
+
+    var trackAnimation = new BMapGLLib.TrackAnimation(map, pl, opts)
+
+    document.getElementById('start').addEventListener('click', () => {
+      trackAnimation.start()    // 开始播放动画
+    })
+    document.getElementById('end').addEventListener('click', () => {
+      trackAnimation.cancel()    // 强制停止动画
+    })
+    
+  </script>
+</body>
+</html>

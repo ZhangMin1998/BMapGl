@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3</title>
+  <style type="text/css"> 
+    html{
+      height:100%
+    } 
+    body{
+      height:100%;
+      margin:0px;
+      padding:0px
+    } 
+    #container{
+      overflow: hidden;
+      margin: 0 auto;
+      width: 1000px;
+      height:800px;
+    } 
+  </style> 
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=RbzS7IPjXDbtzKHqLxvv0xoawojKsAnr"></script>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    console.log(window.BMapGL)
+
+    var map = new BMapGL.Map("container")
+    var point = new BMapGL.Point(116.404, 39.915) // 中心点位置
+    map.centerAndZoom(point, 16)
+    map.enableScrollWheelZoom(true) //开启鼠标滚轮缩放
+
+    // 1.设置zoom
+    // map.setZoom(15) 
+    // alert(map.getCenter())
+
+    // 2.设置地图中心点
+    // map.setCenter(point)
+    // alert(map.getCenter().lng + ',' +  map.getCenter().lat)
+
+    // 3. 通过方法方式设置地图允许的最大最小级别
+    // map.setMinZoom(4)
+    // map.setMaxZoom(20)
+
+    // 4.3D设置
+    // map.setHeading(10) //设置地图旋转角度
+    // map.setTilt(30) //设置地图的倾斜角度
+    // map.enableScrollWheelZoom(true)
+
+    // 5.禁止地图旋转和倾斜可以通过配置项进行设置
+    // var map = new BMapGL.Map("allmap",{
+    //   enableRotate: false,
+    //   enableTilt: false
+    // })
+    
+    // 6.设置底图POI显示
+    map.setDisplayOptions({
+      poi: true, //是否显示POI信息 
+      poiIcon: false, //是否显示POI图标
+      overlay: false,   //是否显示覆盖物
+      skyColors: ['rgba(186, 0, 255, 0)','rgba(186, 0, 255, 0.2)'], // 3D模式下设置天空颜色
+    })
+
+    // 7.图层  地球模式
+    map.setMapType(BMAP_EARTH_MAP) // BMAP_NORMAL_MAP
+    map.setDisplayOptions({
+      street: true, //是否显示路网（只对卫星图和地球模式有效）
+    })
+  </script>
+</body>
+</html>
